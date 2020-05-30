@@ -1,41 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, createRef } from "react";
 import axios from "axios";
 
 export const Upload = props => {
   const [keyLink, setKeyLink] = useState("");
-  const [message, setMessage] = useState("");
+  const fileRef = createRef();
 
-
-  const handleMessageChange = e => {
-      setMessage(e.target.value)
-  }
-
-//   const handleFile = e => {
-//       const formData = new FormData()
-//   }
-
-  const post = () => {
-    // for now just remove previous each time...
-    setKeyLink("");
-    setMessage("")
-    axios({
-      method: "post",
-      url: "https://file.io",
-      data:`text=${message}`
-    }).then(({ data }) => {
-      setKeyLink(data.link);
-    });
+  const handleSubmit = e => {
+      setKeyLink("")
+    const data = new FormData();
+    data.append('file', fileRef.current.files[0])
+    axios.post("https://file.io", data)
+    .then(({data}) => setKeyLink(data.link))
+    e.preventDefault();
   };
 
   return (
     <div>
-      <div>
-        <input type="text" onChange={handleMessageChange} value={message}/>
-      </div>
-      <br />
-      <button onClick={post}>press to send secret message</button>
-      <br />
-      <h6>{keyLink}</h6>
+      <form onSubmit={handleSubmit}>
+        <input type="file" ref={fileRef} />
+        <input type="submit" value="Submit" />
+      </form>
+      <br/>
+      {keyLink}
     </div>
   );
 };
