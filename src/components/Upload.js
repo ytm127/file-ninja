@@ -6,11 +6,12 @@ export const Upload = props => {
   const fileRef = createRef();
 
   const handleSubmit = e => {
-      setKeyLink("")
+    setKeyLink("");
     const data = new FormData();
-    data.append('file', fileRef.current.files[0])
-    axios.post("https://file.io", data)
-    .then(({data}) => setKeyLink(data.link))
+    data.append("file", fileRef.current.files[0]);
+    axios
+      .post("https://file.io", data)
+      .then(({ data }) => setKeyLink(data.link));
     e.preventDefault();
   };
 
@@ -20,7 +21,7 @@ export const Upload = props => {
         <input type="file" ref={fileRef} />
         <input type="submit" value="Submit" />
       </form>
-      <br/>
+      <br />
       {keyLink}
     </div>
   );
